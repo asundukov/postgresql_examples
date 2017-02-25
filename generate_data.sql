@@ -21,7 +21,7 @@ INSERT INTO person (name)
 SELECT md5(cast(random() as text)) as name
 FROM generate_series(1,800) AS t(num);
 
-/* add 10*n photos with different times on each person */
+/* add ~10*n photos with different times on each person */
 INSERT INTO photo (person_id, title, url)
 SELECT p.person_id, concat(md5(cast(random() as text))) as title, concat('http://', md5(cast(random() as text)), '.ru') as url
 FROM person p
