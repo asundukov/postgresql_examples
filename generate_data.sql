@@ -33,7 +33,7 @@ SELECT p.person_id, concat(md5(cast(random() as text))) as title, concat('http:/
 FROM (SELECT p.person_id FROM person p WHERE 1 = round(random()*3)) p
 LEFT JOIN generate_series(1,10) AS t(num) ON (true);
 
-/* multiply current photo count for active users k times (k = 1.7) */
+/* multiply current photo count for active users ~k times (k = 1.7) */
 INSERT INTO photo (person_id, title, url)
 SELECT p.person_id, concat(md5(cast(random() as text))) as title, concat('http://', md5(cast(random() as text)), '.ru') as url
 FROM photo p
