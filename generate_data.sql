@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS message;
 DROP TABLE IF EXISTS photo;
 DROP TABLE IF EXISTS person;
 
@@ -17,7 +16,7 @@ CREATE TABLE photo (
 );
 
 
-/* add n persons */
+/* add n persons (n=800)*/
 INSERT INTO person (name)
 SELECT md5(cast(random() as text)) as name
 FROM generate_series(1,800) AS t(num);
@@ -28,18 +27,17 @@ SELECT p.person_id, concat(md5(cast(random() as text))) as title, concat('http:/
 FROM person p
 LEFT JOIN generate_series(1,100) AS t(num) ON (1 = round(random()*10));
 
-/* or add k photos for ~1/3 persons */
+/* or add m photos for each of ~1/3 persons (m=10) */
 INSERT INTO photo (person_id, title, url)
 SELECT p.person_id, concat(md5(cast(random() as text))) as title, concat('http://', md5(cast(random() as text)), '.ru') as url
 FROM (SELECT p.person_id FROM person p WHERE 1 = round(random()*3)) p
 LEFT JOIN generate_series(1,10) AS t(num) ON (true);
 
-/* or add from 1 to k photos for each person */
+/* or add random count (from 1 to k) photos for each person (k=10) */
 INSERT INTO photo (person_id, title, url)
 SELECT p.person_id, concat(md5(cast(random() as text))) as title, concat('http://', md5(cast(random() as text)), '.ru') as url
 FROM person p
 LEFT JOIN generate_series(1,cast(round(random()*10) as int)) AS t(num) ON (t.num < (random() * 10));
-
 
 /* see result allocation */
 SELECT 
@@ -91,3 +89,6 @@ ORDER BY 2 DESC;
 (28 rows)
 
 */
+
+
+/* In real system you can change any param (n, m, k) at any time. And all data still valid after next data generation */
